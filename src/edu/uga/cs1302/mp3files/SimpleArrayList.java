@@ -1,5 +1,6 @@
 // very similar to the ArrayList class in OpenJDK
 
+//package edu.uga.cs1302.mp3files;
 
 import java.lang.UnsupportedOperationException;
 import java.util.NoSuchElementException;
@@ -117,7 +118,7 @@ public class SimpleArrayList<E> {
 
 	// shift the contents of the array one cell to the left from index, but only if
 	// it is not the last cell
-	if( index < count - 1 )
+	if( index < count -1 )
 	    System.arraycopy( list, index+1, list, index, count - index - 1 );
 
 	list[ --count ] = null;
@@ -196,29 +197,35 @@ public class SimpleArrayList<E> {
 	implements ListIterator<E>
     {
 	private int currPos = 0; // index of the element to be returned next
+	private int start = 0;
         private int expectedModCount = modCount;
 
 	// Creates a new iterator starting at position index.
 	// javadoc comment needed
 	public SimpleArrayListIterator( int index )
 	{
-	    // replace with your code
+		
+		
+		this.currPos = index;
+		
+		
 	}
 	    
 	// Returns true if this list iterator has more elements when traversing the list forward.
 	// javadoc comment needed
 	public boolean hasNext() 
 	{
-	    // replace with your code
-	    return true;
+	    
+	    return this.currPos < count;
 	}
 
 	// Returns true if this list iterator has more elements when traversing the list in the reverse direction.
 	// javadoc comment needed
 	public boolean hasPrevious() 
 	{
+		
 	    // replace with your code
-	    return true;
+		return this.currPos  > 0;
 	}
 
 	/**
@@ -241,25 +248,42 @@ public class SimpleArrayList<E> {
 	// javadoc comment needed
 	public int nextIndex() 
 	{
-	    // replace with your code
-	    return 0;
-	}
+	    
+		if(this.hasNext()) {
+            int current = currPos;
+            currPos ++;
+            return current;
+        }
+        throw new NoSuchElementException();
+    }
+	
 
 	// Returns the previous element in the list.
 	// javadoc comment needed
 	@SuppressWarnings("unchecked")
 	public E previous() 
 	{
-	    // replace with your code
-	    return null;
+
+	    checkForComodification();
+	    if( currPos < 0)
+		throw new NoSuchElementException();
+	    // note the use of the "outer" class reference in SimpleArrayList.this
+	    // to access the outer class
+	    
+	    return (E) SimpleArrayList.this.list[ currPos--];
 	}
 
 	// Returns the index of the element that would be returned by a call to previous.
 	// javadoc comment needed
 	public int previousIndex() 
 	{
-	    // replace with your code
-	    return 0;
+		if(this.hasPrevious()) {
+            int current = currPos ;
+            currPos --;
+            return current;
+        }
+        throw new NoSuchElementException();
+    
 	}
 
 	// the following are optional operations which are not supported in the 
